@@ -1,12 +1,15 @@
 "use strict";
 describe 'audio service', () ->
-  beforeEach module('drummachine')
   audio = null
-  getAudio = ->
-    inject (_audio_) ->
-      audio = _audio_
+  beforeEach module('drummachine')
+  beforeEach inject (_audio_) ->
+    audio = _audio_
 
-  beforeEach getAudio()
+  beforeEach ->
+    jasmine.clock().install()
 
   it 'should unlock audio context in 20 miliseconds', () ->
-    expect(audio.unlock).toBeDefined()
+    audio.unlock()
+    expect(audio.isUnlocked).toBe(false)
+    jasmine.clock().tick(20)
+    expect(audio.isUnlocked).toBe(true)

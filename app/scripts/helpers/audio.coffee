@@ -1,6 +1,6 @@
 "use strict";
 
-angular.module("drummachine").factory "audio", ->
+angular.module("drummachine").factory "audio", ($timeout) ->
   AudioContext = window.AudioContext or window.webkitAudioContext
   context = new AudioContext()
   isUnlocked = false
@@ -13,12 +13,15 @@ angular.module("drummachine").factory "audio", ->
     source.start ||= source.noteOn 0
     
     # by checking the play state after some time, we know if we're really unlocked
-    window.setTimeout (->
+    $timeout (->
       isUnlocked = true  if source.playbackState is source.PLAYING_STATE or source.playbackState is source.FINISHED_STATE
       window.removeEventListener 'touchstart', unlock, true 
     ), 10
 
-  window.addEventListener 'touchstart', unlock, true
+  window.addEventListener 'touchstart', ->
+    unlock() unless isUnlocked
+  , true
+  unlock()
 
   context: context
   isUnlocked: isUnlocked
