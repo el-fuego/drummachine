@@ -1,6 +1,6 @@
 "use strict";
 
-@app.factory "audio", ->
+@app.factory "audio", ($timeout) ->
   AudioContext = window.AudioContext or window.webkitAudioContext
   context = new AudioContext()
   isUnlocked = false
