@@ -5,6 +5,8 @@ describe 'audio service', () ->
   beforeEach inject (_audio_) ->
     audio = _audio_
 
+    sss = 2
+
   beforeEach ->
     jasmine.clock().install()
 

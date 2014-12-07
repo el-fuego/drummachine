@@ -11,14 +11,18 @@ var gulp =    require('gulp'),
 var paths = {
     coffee:     [
         'app/scripts/app.coffee',
-        'app/scripts/*.coffee',
-        'app/scripts/**/*.coffee'
+        'app/scripts/{**/,}*.coffee'
     ],
+    js:  'dist/scripts/script.min.js',
     coffeeTest:     [
-        'app/spec/*spec.coffee',
-        'app/spec/**/*spec.coffee'
+        'app/spec/{**/,}*spec.coffee'
     ],
-    styles:     ['app/styles/*.styl','app/styles/**/*.styl'],
+    unitTest:     [
+        'spec/{**/,}*spec.coffee'
+    ],
+    styles:     [
+        'app/styles/{**/,}*.styl'
+    ],
     templates:  'app/*.jade'
 };
 
@@ -61,13 +65,6 @@ function coffeeTest() {
         .pipe(gulp.dest('spec'));
 }
 
-function watch() {
-    gulp.watch(paths.coffee, coffee);
-    gulp.watch(paths.styles, styles);
-    gulp.watch(paths.templates, templates);
-    gulp.watch(paths.coffeeTest, coffeeTest);
-}
-
 function webserver() {
     plugins.connect.server({
         // livereload: true,
@@ -83,15 +80,26 @@ function protractor() {
             args:       ['--baseUrl', 'http://127.0.0.1:8000', '--ignore-ssl-errors=yes']
         }));
 }
-function karmaTest(done) {
+function unitTest(done) {
     karma.start({
         configFile: __dirname + '/karma.conf.js',
         singleRun:  true
     }, done);
 }
 
-function clean() {
-    return gulp.src(['dist', 'spec'], {read: false}).pipe(plugins.rimraf());
+
+function watch() {
+    gulp.watch(paths.coffee, coffee);
+    gulp.watch(paths.styles, styles);
+    gulp.watch(paths.templates, templates);
+}
+
+function watchTest() {
+    gulp.watch(paths.coffee, coffee);
+    gulp.watch(paths.js, unitTest);
+    gulp.watch(paths.templates, templates);
+    gulp.watch(paths.coffeeTest, coffeeTest);
+    gulp.watch(paths.karmaTest, unitTest);
 }
 
 function build() {
@@ -106,11 +114,18 @@ function serve() {
     watch();
 }
 
+
+
 /**
  * Tasks
  */
 
-gulp.task('clean', clean);
+gulp.task('clean', function () {
+    return gulp.src('dist', {read: false}).pipe(plugins.rimraf());
+});
+gulp.task('cleanTest', function () {
+    return gulp.src('spec', {read: false}).pipe(plugins.rimraf());
+});
 
 gulp.task('serve', ['clean'], function () {
     config.production = false;
@@ -123,5 +138,7 @@ gulp.task('default', ['serve']);
 
 gulp.task('build', ['clean'], build);
 
-gulp.task('buildTest', ['build'], coffeeTest);
-gulp.task('test', ['buildTest'], karmaTest);
+gulp.task('buildTest', ['cleanTest'], coffeeTest);
+gulp.task('unitTest', ['build', 'buildTest'], unitTest);
+
+gulp.task('test', ['unitTest'], watchTest);
