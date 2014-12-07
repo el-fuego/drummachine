@@ -77,18 +77,18 @@ function webserver() {
 }
 
 function protractor() {
-    return gulp.src('dist/test/(**/,)*spec.js')
+    return gulp.src('dist/test/{**/,}*spec.js')
         .pipe(plugins.protractor.protractor({
-            configFile: "spec/_protractor.config.js",
+            configFile: "protractor.conf.js",
             args:       ['--baseUrl', 'http://127.0.0.1:8000', '--ignore-ssl-errors=yes']
         }));
 }
-function karmaTest (done) {
-  karma.start({
-    configFile: __dirname + '/karma.conf.js',
-    singleRun: true
-  }, done);
-};
+function karmaTest(done) {
+    karma.start({
+        configFile: __dirname + '/karma.conf.js',
+        singleRun:  true
+    }, done);
+}
 
 function clean() {
     return gulp.src(['dist', 'spec'], {read: false}).pipe(plugins.rimraf());
