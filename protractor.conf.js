@@ -14,8 +14,8 @@ exports.config = {
     // Spec patterns are relative to the current working directly when
     // protractor is called.
 
-    specs: [__dirname + '/../../dist/test/*spec.js',
-            __dirname + '/../../dist/test/**/*spec.js'],
+    specs: [__dirname + '/dist/test/*spec.js',
+            __dirname + '/dist/test/**/*spec.js'],
 
     exclude: [],
 
