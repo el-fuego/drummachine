@@ -1,6 +1,6 @@
 "use strict";
 
-angular.module("drummachine").factory "audio", ->
+@app.factory "audio", ->
   AudioContext = window.AudioContext or window.webkitAudioContext
   context = new AudioContext()
   isUnlocked = false
