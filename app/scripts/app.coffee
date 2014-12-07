@@ -1,2 +1,3 @@
 
-@app = angular.module 'app', []
+@app = angular.module('drummachine', []).run (audio) ->
+  audio.unlock()

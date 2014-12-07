@@ -9,13 +9,14 @@ var gulp =    require('gulp'),
 var paths = {
     coffee:     [
         'app/scripts/app.coffee',
-        'app/scripts/(**/,)*.coffee'
+        'app/scripts/*.coffee',
+        'app/scripts/**/*.coffee'
     ],
     coffeeTest:     [
         'app/test/*spec.coffee',
         'app/test/**/*spec.coffee'
     ],
-    styles:     'app/styles/(**/,)*.styl',
+    styles:     ['app/styles/*.styl','app/styles/**/*.styl'],
     templates:  'app/*.jade'
 };
 
