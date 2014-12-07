@@ -1,0 +1,17 @@
+doctype html
+html(lang="en")
+  head
+    title Hangman game
+    link(rel="stylesheet" href="styles/style.min.css")
+
+    // build:js scripts/vendor.js
+    script(src='bower_components/jquery/dist/jquery.js')
+
+    script(src='bower_components/lodash/dist/lodash.js')
+    script(src='bower_components/angular/angular.js')
+
+    // endbuild
+
+    script(src="scripts/script.min.js")
+
+  body(ng-app="app")
