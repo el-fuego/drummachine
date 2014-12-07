@@ -1,6 +1,6 @@
 "use strict";
 
-angular.module('drummachine').factory "Track", ->
+angular.module('drummachine').factory "Track", (Note) ->
   (data) ->
     instrument: data.instrument
-    notes:      []
+    notes:    _.map(data.notes || [], (data) -> new Note data)
