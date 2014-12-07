@@ -3,5 +3,4 @@ node_modules
 dist
 .tmp
 app/bower_components
-spec
-dist
+/spec
