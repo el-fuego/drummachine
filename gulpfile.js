@@ -72,14 +72,14 @@ function webserver() {
         root: config.production ? ['dist'] : ['dist', 'app']
     });
 }
-
-function protractor() {
-    return gulp.src('dist/test/{**/,}*spec.js')
-        .pipe(plugins.protractor.protractor({
-            configFile: "protractor.conf.js",
-            args:       ['--baseUrl', 'http://127.0.0.1:8000', '--ignore-ssl-errors=yes']
-        }));
-}
+//
+//function protractor() {
+//    return gulp.src('dist/test/{**/,}*spec.js')
+//        .pipe(plugins.protractor.protractor({
+//            configFile: "protractor.conf.js",
+//            args:       ['--baseUrl', 'http://127.0.0.1:8000', '--ignore-ssl-errors=yes']
+//        }));
+//}
 function unitTest(done) {
     karma.start({
         configFile: __dirname + '/karma.conf.js',
@@ -95,11 +95,13 @@ function watch() {
 }
 
 function watchTest() {
-    gulp.watch(paths.coffee, coffee);
-    gulp.watch(paths.js, unitTest);
-    gulp.watch(paths.templates, templates);
+    watch();
     gulp.watch(paths.coffeeTest, coffeeTest);
-    gulp.watch(paths.karmaTest, unitTest);
+
+    karma.start({
+        configFile: __dirname + '/karma.conf.js',
+        action: 'watch'
+    });
 }
 
 function build() {
@@ -109,7 +111,6 @@ function build() {
 }
 
 function serve() {
-    build();
     webserver();
     watch();
 }
@@ -127,18 +128,18 @@ gulp.task('cleanTest', function () {
     return gulp.src('spec', {read: false}).pipe(plugins.rimraf());
 });
 
-gulp.task('serve', ['clean'], function () {
+gulp.task('serve', ['clean', 'build'], function () {
     config.production = false;
     serve();
 });
 
-gulp.task('serve:production', ['clean'], serve);
+gulp.task('serve:production', ['clean', 'build'], serve);
 
-gulp.task('default', ['serve']);
+gulp.task('default', ['serve', 'test']);
 
 gulp.task('build', ['clean'], build);
 
 gulp.task('buildTest', ['cleanTest'], coffeeTest);
 gulp.task('unitTest', ['build', 'buildTest'], unitTest);
 
-gulp.task('test', ['unitTest'], watchTest);
+gulp.task('test', ['build', 'buildTest'], watchTest);
