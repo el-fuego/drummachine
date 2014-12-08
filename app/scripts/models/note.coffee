@@ -1,8 +1,9 @@
 "use strict";
 
 angular.module('drummachine').factory "Note", ->
-  (data) ->
-    value:   data.value
-    volume:  data.volume
+  class Note
+    constructor: (data) ->
+      this.value =   data?.value
+      this.volume =  data?.volume
     isPause: ->
-      data.volume == 0
+      @volume == 0
